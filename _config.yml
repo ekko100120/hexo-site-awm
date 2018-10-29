@@ -79,3 +79,24 @@ theme: hexo-theme-awm
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type:
+
+nav:
+  -
+    title: 首页
+    link: /
+  -
+    title: 笔记
+    link: /note.html
+  -
+    title: 博客
+    link: /blog.html
+  -
+    title: 关于
+    link: /about.html
+  -
+    title: test
+    link: /test.html
+
+contract:
+  github: https://github.com/bulldogcfq
+  email: 'mailto:bulldogcfq@163.com'
