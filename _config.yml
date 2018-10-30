@@ -13,8 +13,6 @@ timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
-root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
@@ -82,20 +80,17 @@ deploy:
 
 nav:
   -
-    title: 首页
+    title: Home
     link: /
   -
-    title: 笔记
+    title: Note
     link: /note.html
   -
-    title: 博客
+    title: Blog
     link: /blog.html
   -
-    title: 关于
+    title: About
     link: /about.html
-  -
-    title: test
-    link: /test.html
 
 contract:
   github: https://github.com/bulldogcfq
