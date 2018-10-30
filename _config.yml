@@ -48,7 +48,6 @@ highlight:
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
   path: ''
-  per_page: 10
   order_by: -date
   
 # Category & Tag
@@ -76,7 +75,8 @@ theme: hexo-theme-awm
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: git
+  repo: git@github.com:bulldogcfq/bulldogcfq.github.io.git
 
 nav:
   -
