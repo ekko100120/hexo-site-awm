@@ -10,6 +10,14 @@ Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [docume
 
 ### Create a new post
 
+
+``` javascript
+    var test = 12;
+    (() => {
+        console.log(test);
+    })();
+```
+
 ``` bash
 $ hexo new "My New Post"
 ```
