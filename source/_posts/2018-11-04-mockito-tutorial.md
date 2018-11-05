@@ -1,6 +1,6 @@
 ---
 layout: post
-title: mockito 用法总结
+title: mockito 入门用法总结
 date: 2018-11-04 20:41:27
 tags: ['java', 'test', 'mock', 'mockito']
 category: ['后台', 'java']
@@ -166,15 +166,18 @@ stubbing还有另一种使用形式`doX().when(mockedObject).someMethod()`，具
     when(mockedList.get(anyInt())).thenReturn("element");
 
     //stubbing using custom matcher (let's say isValid() returns your own matcher implementation):
-    when(mockedList.get(argThat(new HamcrestArgumentMatcher<>(new CustomMatcher<Integer>("less than 5") {
+    when(mockedList.get(intThat(new ArgumentMatcher<Integer>() {
       @Override
-      public boolean matches(Object o) {
-        return Integer.parseInt(o.toString()) < 5 ;
+      public boolean matches(Integer integer) {
+        return integer < 5;
       }
-    })))).thenReturn("element");
+    }))).thenReturn("element less than 5");
+
+    when(mockedList.get(intThat(integer -> integer > 5))).thenReturn("element greater than 5");
 
     //following prints "element"
-    mockedList.get(0);
+    System.out.println(mockedList.get(0));
+    System.out.println(mockedList.get(5));
     System.out.println(mockedList.get(999));
 
     //you can also verify using an argument matcher
@@ -182,7 +185,7 @@ stubbing还有另一种使用形式`doX().when(mockedObject).someMethod()`，具
   }
 ```
 
-上面的方法规定传入任何int类型的参数，都会返回element，如果逻辑比较复杂，我们还可以自己实现ArgumentMatcher接口的matches方法，并配合XThat使用
+上面的方法规定传入任何int类型的参数，都会返回element，`mockito`内置了一些参数匹配器，在`ArgumentMatchers`类中，如果逻辑比较复杂，我们还可以自己实现ArgumentMatcher接口的matches方法，并配合XThat使用
 
 Note:  
 
@@ -191,4 +194,412 @@ Note:
 
 ## 断言方法调用次数
 
-使用`times()`可以断言方法调用的次数
+`mockito`提供了`times()/atLeast()/never()`方法断言mock对象方法调用的次数，默认为times(1)，即只调用一次
+
+```java
+@Test
+  public void verifyExactNumberOfInvocations() {
+    List mockedList = mock(List.class);
+    //times(1) is the default. Therefore using times(1) explicitly can be omitted.
+    //using mock
+    mockedList.add("once");
+
+    mockedList.add("twice");
+    mockedList.add("twice");
+
+    mockedList.add("three times");
+    mockedList.add("three times");
+    mockedList.add("three times");
+
+    //following two verifications work exactly the same - times(1) is used by default
+    verify(mockedList).add("once");
+    verify(mockedList, times(1)).add("once");
+
+    //exact number of invocations verification
+    verify(mockedList, times(2)).add("twice");
+    verify(mockedList, times(3)).add("three times");
+
+    //verification using never(). never() is an alias to times(0)
+    verify(mockedList, never()).add("never happened");
+
+    //verification using atLeast()/atMost()
+    verify(mockedList, atLeastOnce()).add("three times");
+    verify(mockedList, atLeast(2)).add("three times");
+    verify(mockedList, atMost(5)).add("three times");
+  }
+```
+
+`mockito`还提供了`verifyZeroInteractions`,`verifyNoMoreInteractions`方法断言对象方法从未被调用和不会再被调用
+
+```java
+//using mocks - only mockOne is interacted
+ mockOne.add("one");
+
+ //ordinary verification
+ verify(mockOne).add("one");
+
+ //verify that method was never called on a mock
+ verify(mockOne, never()).add("two");
+
+ //verify that other mocks were not interacted
+ verifyZeroInteractions(mockTwo, mockThree);
+
+  //using mocks
+ mockedList.add("one");
+ mockedList.add("two");
+
+ verify(mockedList).add("one");
+
+ //following verification will fail
+ verifyNoMoreInteractions(mockedList);
+```
+
+## 断言mock对象行为调用的顺序
+
+- 断言单个对象
+    ```java
+    @Test
+    public void verification_in_order() {
+
+      // A. Single mock whose methods must be invoked in a particular order
+      List singleMock = mock(List.class);
+
+      //using a single mock
+      singleMock.add("was added first");
+      singleMock.add("was added second");
+
+      //create an inOrder verifier for a single mock
+      InOrder inOrder = inOrder(singleMock);
+
+      //following will make sure that add is first called with "was added first, then with "was added second"
+      inOrder.verify(singleMock).add("was added first");
+      inOrder.verify(singleMock).add("was added second");
+    }
+    ```
+- 断言多个对象
+    ```java
+      @Test
+      public void verification_in_order() {
+        // B. Multiple mocks that must be used in a particular order
+        List firstMock = mock(List.class);
+        List secondMock = mock(List.class);
+
+        //using mocks
+        firstMock.add("was called first");
+        secondMock.add("was called second");
+
+        //create inOrder object passing any mocks that need to be verified in order
+        InOrder inOrder2 = inOrder(firstMock, secondMock);
+
+        //following will make sure that firstMock was called before secondMock
+        inOrder2.verify(firstMock).add("was called first");
+        inOrder2.verify(secondMock).add("was called second");
+      }
+    ```
+
+断言mock对象方法调用顺序不要求我们对调用的每一个方法进行断言，我们可以只断言我们关心的方法，只要他们的执行顺序是正确的
+
+## 链式调用
+
+stubbing 支持链式调用
+
+```java
+  @Test
+  public void stubbing_consecutive_calls() {
+    List mockedList = mock(List.class);
+
+    when(mockedList.get(0))
+            .thenThrow(new RuntimeException())
+            .thenReturn("foo");
+
+    try {
+      //First call: throws runtime exception:
+      mockedList.get(0);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    //Second call: prints "foo"
+    System.out.println(mockedList.get(0));
+
+    //Any consecutive call: prints "foo" as well (last stubbing wins).
+    System.out.println(mockedList.get(0));
+
+    //shorter version of consecutive stubbing
+    //this override the previous stubbing, even last value not called
+    when(mockedList.get(0)).thenReturn("one", "two", "three");
+    System.out.println(mockedList.get(0));
+    System.out.println(mockedList.get(0));
+    System.out.println(mockedList.get(0));
+  }
+```
+
+链式调用的语法是when().thenX().thenX()...，上面的方法的第一段代码规定第一次调用抛出一个运行时异常，第二次调用返回'foo'，链式调用还有一种更简洁的写法，适合多个相同的thenX()进行链式调用，具体的语法为thenX(arg1, arg1, arg3)，等价于thenX(args).thenX(arg2).thenX(arg3)。
+
+要注意的是，多次stubbing不会依次被调用，而是会覆盖之前的stubbing
+
+## 使用Answer接口
+
+一般来说`thenReturn`和`thenThrow`可以满足大多数需求，但有些逻辑比较的复杂的时候，我们可以使用`thenAnswer()`方法
+
+```java
+  @Test
+  public void stubbing_with_callbacks() {
+    List mockedList = mock(List.class);
+
+    when(mockedList.get(anyInt())).thenAnswer(
+            new Answer() {
+              public Object answer(InvocationOnMock invocation) {
+                Object[] args = invocation.getArguments();
+                Object mock = invocation.getMock();
+                return "called with arguments: " + Arrays.toString(args);
+              }
+            });
+
+    //Following prints "called with arguments: [foo]"
+    System.out.println(mockedList.get(999));
+    System.out.println(mockedList.get(999));
+  }
+```
+
+## 使用spy对象
+
+使用spy对象会去调用真实的方法，除非该方法被stubbing
+
+```java
+  @Test
+  public void spy_on_real_objects() {
+    List list = new LinkedList();
+    List spy = spy(list);
+
+    //optionally, you can stub out some methods:
+    when(spy.size()).thenReturn(100);
+
+    //using the spy calls *real* methods
+    spy.add("one");
+    spy.add("two");
+
+    //prints "one" - the first element of a list
+    System.out.println(spy.get(0));
+
+    //size() method was stubbed - 100 is printed
+    System.out.println(spy.size());
+
+    //optionally, you can verify
+    verify(spy).add("one");
+    verify(spy).add("two");
+
+    //Impossible: real method is called use doReturn().when()
+    try {
+      when(spy.get(3)).thenReturn(1);
+      System.out.println(spy.get(0));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    //You have to use doReturn() for stubbing to spy
+    doReturn(0).when(spy).get(anyInt());
+    try {
+      System.out.println(spy.get(3));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+```
+
+Note:
+当spy对象与when()方法结合使用时，要小心，因为spy对象会去调用真实的对象方法，使用when()  API stub 就会去调用真实的方法，所以stubbing spy 对象的时候，建议使用doX().when() API
+
+## 参数捕获
+
+使用`ArgumentCaptor`可以捕获调用参数，从而对参数进行断言，`ArgumentCaptor`能够让我们对mock对象的行为和参数分开进行断言
+
+```java
+  @Test
+  public void capturing_arguments_for_further_assertions() {
+    class Person {
+      private String name;
+      private int age;
+
+      public String getName() {
+        return name;
+      }
+
+      public void setName(String name) {
+        this.name = name;
+      }
+
+      public int getAge() {
+        return age;
+      }
+
+      public void setAge(int age) {
+        this.age = age;
+      }
+    }
+    Person mockedPerson = mock(Person.class);
+
+    mockedPerson.setName("chenfuqiang");
+    ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+    verify(mockedPerson).setName(argument.capture());
+    assertEquals("chenfuqiang", argument.getValue());
+  }
+```
+
+一般来说，参数匹配器已经能够满足断言的需求，除非有以下几种情况
+
+- 参数断言复用较多
+- 需要对参数进行更深层次的断言
+
+## 重置mock对象
+
+使用reset方法可以重置mock对象之前stubbing，就好像它是刚刚mock出来的一样，这和spring结合使用很方便，我们可以在每个测试用例前将所有的mock对象重置一下，避免测试用例间会互相干扰
+
+```java
+  @Test
+  public void resetting_mocks() {
+    List mockedList = mock(List.class);
+    when(mockedList.size()).thenReturn(100);
+    assertEquals(100, mockedList.size());
+    reset(mockedList);
+    //will print 0
+    System.out.println(mockedList.size());
+  }
+```
+
+## 使用BDD测试风格
+
+BDD(Behavior Driven Development )测试风格使用//givin//when//then三步走，`mockito`默认的API与之不能很好的吻合，`mockito`提供了另一套适合BDD测试风格的API，用于BDD测试
+
+```java
+import static org.mockito.BDDMockito.*;
+
+ Seller seller = mock(Seller.class);
+ Shop shop = new Shop(seller);
+
+ public void shouldBuyBread() throws Exception {
+   //given
+   given(seller.askForBread()).willReturn(new Bread());
+
+   //when
+   Goods goods = shop.buyBread();
+
+   //then
+   assertThat(goods, containBread());
+ }
+```
+
+## 使用注解
+
+`mockito`提供了一套注解`@Mock`，`@Spy`，`@InjectMocks`，`@Captor`用于方便开发，这些注解需要显式调用` MockitoAnnotations.initMocks(testClass)`或是使用`MockitoJunitRunner`启用
+
+- `@Mock`，创建mock对象
+
+```java
+public class Test{
+  @Mock
+  List mockedList;
+
+  /**
+   * enable @mock annotation
+   * Note: can use MockitoJunitRunner instead
+   */
+  @Before
+  public void setup() {
+    MockitoAnnotations.initMocks(this);
+  }
+
+  @Test
+  public void shorthand_for_mocks_creation_use_mock_annotation() {
+    mockedList.add("one");
+
+    verify(mockedList).add("one");
+  }
+}
+```
+
+- `@Spy` 创建Spy对象
+
+```java
+@RunWith(MockitoJunitRunner.class)
+public class Test {
+    @Spy
+  private ArrayList<String> spyList;
+
+  @Test
+  public void use_spy_annotation() {
+    spyList.add("one");
+    System.out.println(spyList.size());
+  }
+}
+```
+
+- `@Captor` 创建参数捕获对象
+  
+```java
+class Person{
+  private String name;
+
+  public Person(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+}
+
+public class Test {
+    @Captor
+  private ArgumentCaptor<Person> personArgumentCaptor;
+
+  @Test
+  public void use_captor_annotation() {
+    List<Person> mockedList = (List<Person>)mock(List.class);
+
+    Person person = new Person("hello");
+
+    when(mockedList.add(person)).thenReturn(true);
+    
+    mockedList.add(person);
+    
+    verify(mockedList).add(personArgumentCaptor.capture());
+    
+    assertEquals(person.getName(), personArgumentCaptor.getValue().getName());
+
+  }
+}
+```
+
+- `@InjectMocks` 自动注入mock对象依赖，自动注入规则和Spring相似，支持构造器注入，setter方法注入和属性注入，下面展示属性注入，其他类似
+
+```java
+class DependentService{
+    ...
+}
+
+class TestService {
+  private DependentService dependentService;
+}
+
+class TestClass {
+  @Mock
+  private DependentService dependentService;
+
+  @InjectMocks
+  private TestService testService;
+}
+```
+
+上述代码将DependenciedService对应的mock对象自动注入到testService中
+
+## 参考文档
+
+- [mockito文档](https://static.javadoc.io/org.mockito/mockito-core/2.23.0/org/mockito/Mockito.html#never_verification)
+- [mockito 简明教程](https://www.aliyun.com/jiaocheng/549032.html)
+- [mockito 教程](https://www.cnblogs.com/Ming8006/p/6297333.html)
+- [Mock InjectMocks ( @Mock 和 @InjectMocks )区别](https://blog.csdn.net/kurt17/article/details/52670482)
