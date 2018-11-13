@@ -11,6 +11,8 @@ category: ['后台', 'java']
 
 > 在Java的单元测试中, 由于Java的封装性，一些私有的变量和方法是不易测试的，因为我们特么根本就拿不到，不过不要紧，  `org.powermock.reflect.Whitebox` 类提供了一系列的方法让你去打破Java类的封装，使用`Whitebox`后，任何一个类在你面前都是裸奔状态。
 
+[demo 地址](https://github.com/bulldogcfq/learn-powermock)
+
 ## API
 
 不算上方法重载，Whitebox一共提供了4个API供我们使用

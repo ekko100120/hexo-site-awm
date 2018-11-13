@@ -10,6 +10,8 @@ category: ['后台', 'java']
 
 `PowerMock`是一个 java 单元测试框架，他可以用来解决单元测试过程中一些棘手的问题，如如何 mock 静态方法和私有方法，PowerMock 需要结合其他 Mock 框架( Mockito 或 EasyMock )使用，由于我使用的是 `mockito` ，所以这篇文章主要介绍 `PowerMock` 和 `Mockito` 结合的一些主要用法。
 
+[demo 地址](https://github.com/bulldogcfq/learn-powermock)
+
 ## 动机
 
 我们已经有了 `Mockito` ，为什么还要使用 `PowerMock` 呢？其实，`PowerMock` 可以看作是对 `Mockito` 的一个增强，`Mockito` 做的事 `PowerMock` 并没有再实现一遍，而是依赖它的实现，在它的基础上，增加了 mock 静态类，stubbing 私有方法和构造方法以及断言静态方法，私有方法和构造方法。
@@ -56,7 +58,7 @@ public class TestClass {
 
 添加 `@RunWith(PowerMockRunner.class)` 注解，使我们的代码可以使用 `PowerMockito` 的特性，如果我们要 mock 静态类，又或是要 stubbing 和 verify 某个类的私有方法和构造方法，我们需要使用 `@PrepareForTest({StaticClass.class, ClassWithPrivateMethod.class)` 注解，参数 value 为我们要 mock 静态类或是要 stubbing 和 verify 私有方法和构造方法的类的类类型。
 
-## mock 静态类
+## mock 含有静态方法的类
 
 ```java
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -120,7 +122,7 @@ public void verify_exact_number_of_calls() {
 
 静态方法次数断言给 `verifyStatic` 第二个参数传入匹配器 `times` 参数就好了，这个参数匹配器同样来自 `Mockito` 包。
 
-## 使用 doX 语法 stubbing 静态类
+## 使用 doX 语法 stubbing 含有静态方法的类
 
 ```java
 @Test
@@ -140,6 +142,27 @@ public void stub_static_method_to_throw_exception() {
 ```
 
 使用 `when(Static.something()).thenX()` 的语法和 `Mockito` 的使用方法相同，但是，当使用 `doX().when()` 时稍有些不同，有点像前面的断言静态方法调用，`when` 方法传入静态类的类类型，紧接着马上调用静态方法。
+
+## spy 含有静态方法的类
+
+使用 `PowerMock` 的 spy 方法可以 spy 静态类，使用方式为 `PowerMockito.spy(StaticClass.class)`
+
+```java
+@Test
+public void spy_statics_class() {
+  spy(StaticClass.class);
+
+  doReturn("spy statics class").when(StaticClass.class);
+  StaticClass.getName();
+
+  System.out.println(StaticClass.getName());
+
+  verifyStatic(StaticClass.class);
+  StaticClass.getName();
+}
+```
+
+和 `mockito` 类似，`spy` 对象会去调用真实的方法，除非该方法被 stubbing ，上面这个方法 stubbing `StaticClass` 的静态方法返回一个自定义的值，然后断言这个方法被调用了一次，stubbing 和 verify 的用法和 `mock` 含有静态方法的类一样。
 
 ## spy 对象
 

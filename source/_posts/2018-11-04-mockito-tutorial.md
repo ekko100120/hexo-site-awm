@@ -10,6 +10,8 @@ category: ['后台', 'java']
 
 Mock测试是单元测试中的重要方法之一，它解决了在单元测试过程中一些棘手的问题，比如当我们的测试代码依赖太多的外部的因素（如其他类的API），这些外部的因素是不稳定的，我们不希望我们的测试代码因为这些外部因素而失败，还有就是有些依赖不好去构造（如`HttpServletRequest`），所以，我们急需一个能够模拟其他依赖行为的工具，`mockito` 是针对java语言的单元测试Mock工具，本文主要对`mockito`的一些常用用法进行总结。
 
+[demo 地址](https://github.com/bulldogcfq/learn-mockito)
+
 ## API 概览
 
 `mockito`本身提供的API很少，所以它是简单易学的
