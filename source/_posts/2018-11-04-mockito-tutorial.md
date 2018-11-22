@@ -599,6 +599,51 @@ class TestClass {
 
 上述代码将DependenciedService对应的mock对象自动注入到testService中
 
+Note(11-22补充)
+在 `@Mock` 和 `@InjectMocks` 配合使用的时候，只能使用一种注入方式，不能混合使用
+
+```java
+@Service
+public class TestService {
+  @AutoWired
+  private TestServiceInjected1 service1;
+  private TestServiceInjected2 service2;
+  public TestService(TestServiceInjected1 service1) {
+    this.service1  = service1;
+  }
+}
+
+@RunWith(MockitoJUnitRunner.class)
+public class TestServiceTest {
+  @Mock
+  private TestServiceInjected1 service1;
+  @Mock
+  private TestServiceInjected2 service2;
+  @InjectMocks
+  private TestService;
+}
+
+```
+上面这段代码，`TestSercie` 在 Spring 框架中可以工作的很好，所有的依赖都能智能地注入进来，但是测试代码就没那么幸运了， 测试代码中的 `TestService` 中的 `service2` 会是一个 `null`， 在测试的过程中可能会报空指针错误，我猜可能是 `Mockito` 只能使用一种注入方式，但包含构造有参构造方法时，默认使用的构造方法注入，所以只把 `servie1` 注入进来。但是如果你提供了多个构造方法，`Mockito`会智能地帮你注入依赖， 参考下面这个。
+
+```java
+@Service
+public class TestService {
+  @AutoWired
+  private TestServiceInjected1 service1;
+  private TestServiceInjected2 service2;
+  public TestService(TestServiceInjected2 service2) {
+    this.service2  = service2;
+  }
+  @AutoWired
+  public TestService(TestServiceInjected2 service2， TestServiceInjected2 service2) {
+    this.service1 = service1;
+    this.service2  = service2;
+  }
+}
+```
+上面这段代码 在 Spring 和 `Mockito` 中都能很好的工作，但是正常情况下，我们都不会这么写对不对，那就不要这么写，统一使用一种注入方式就好了鸭。
+
 ## 参考文档
 
 - [mockito文档](https://static.javadoc.io/org.mockito/mockito-core/2.23.0/org/mockito/Mockito.html#never_verification)
