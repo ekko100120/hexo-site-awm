@@ -109,9 +109,9 @@ Mock测试是单元测试中的重要方法之一，它解决了在单元测试�
 
 Note:
 
-  - 当mock对象的某个行为（方法）没有被stubbed，该行为会智能的返回一个值，如返回值类型是`String`时返回`""`，返回值是`Integer/int`时返回0，返回值是`Boolean/boolean`时返回false，普通对象则返回`nyll`。
-  - stubbing可以被覆盖，当一个对象的行为（方法）被stub两次时，前面的stub会被后面的stub覆盖
-  - 一旦对象的方法被stubbed，无论该方法被stub多少次，都会返回stubbing的值
+  - 当mock对象的某个行为（方法）没有被stubbed，该行为会智能的返回一个值，如返回值类型是`String`时返回`""`，返回值是`Integer/int`时返回0，返回值是`Boolean/boolean`时返回false，普通对象则返回`null`。
+  - stubbing可以被覆盖，当一个对象的行为（方法）被stubbing两次时，前面的stubbing会被后面的stubbing覆盖
+  - 一旦对象的方法被stubbing，无论该方法被stubbing多少次，都会返回stubbing的值
 
 stubbing还有另一种使用形式`doX().when(mockedObject).someMethod()`，具体看下面代码
 
