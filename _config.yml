@@ -41,16 +41,16 @@ highlight:
   line_number: false
   tab_replace: true
 
-marked:
-  gfm: true
-  pedantic: false
-  sanitize: false
-  tables: true
-  breaks: false
-  smartLists: true
-  smartypants: true
-  modifyAnchors: ''
-  autolink: true
+markdown_it_plus:
+  highlight: true
+  html: true
+  xhtmlOut: true
+  breaks: true
+  langPrefix:
+  linkify: true
+  typographer:
+  quotes: “”‘’
+  pre_class: highlight
   
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
