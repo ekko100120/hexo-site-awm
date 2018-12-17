@@ -2,7 +2,8 @@
   "name": "hexo-site-awm",
   "version": "0.0.1",
   "description": "personal blog buid by hexo",
-  "author": "chenfuqiang",
+  "author": "chenfuqiang <bulldogcfq@163.com>",
+  "repository": "https://github.com/bulldogcfq/hexo-theme-awm",
   "license": "MIT",
   "hexo": {
     "version": "3.8.0"
