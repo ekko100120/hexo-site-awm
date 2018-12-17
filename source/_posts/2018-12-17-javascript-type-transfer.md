@@ -3,7 +3,7 @@ layout: post
 title: javascript 类型转换
 tags: javascript
 date: 2018-12-17 19:19:04
-category: ['frontend', 'javascript']
+category: ['front end', 'javascript']
 ---
 
 
@@ -486,3 +486,7 @@ typeof new Number('12');
  */
 '1,2' == [1, 2];
 ```
+
+## 参考文档
+
+* javascript 权威指南中文版(第六版)
