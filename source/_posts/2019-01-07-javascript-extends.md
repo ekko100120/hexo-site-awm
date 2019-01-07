@@ -16,7 +16,7 @@ date: 2019-01-07 10:29:41
 
 ### object()方法
 
-json格式的发明人Douglas Crockford 在2006年发表的一篇文章中提出一种实现继承的方法，主要思想是基于一个已有对象，创建一个集成该对象的原型。
+json格式的发明人Douglas Crockford 在2006年发表的一篇文章中提出一种实现继承的方法，主要思想是基于一个已有对象，返回一个以该对象为原型的对象。
 
 ```javascript
 function object(proto) {
@@ -559,4 +559,9 @@ console.log(Person.isPrototypeOf(Student));//true
 console.log(Person.prototype.isPrototypeOf(Student.prototype));//true
 ```
 
+## 参考文档
 
+- javascript 高级程序设计(第三版)
+- [阮一峰网络日志-Javascript面向对象编程（三）：非构造函数的继承](http://www.ruanyifeng.com/blog/2010/05/object-oriented_javascript_inheritance_continued.html)
+- [阮一峰网络日志-Javascript面向对象编程（二）：构造函数的继承](http://www.ruanyifeng.com/blog/2010/05/object-oriented_javascript_inheritance.html)
+- [Object|MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object)
