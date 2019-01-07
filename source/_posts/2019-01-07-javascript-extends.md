@@ -1,9 +1,14 @@
 ---
 layout: post
 title: javascript 实现自定义继承的几种方式
-tags: ['javascript', 'extend']
-category: ['javascript']
+tags:
+  - javascript
+  - extend
+category:
+  - javascript
+date: 2019-01-07 10:29:41
 ---
+
 
 # javascript 实现自定义继承
 
@@ -11,9 +16,125 @@ category: ['javascript']
 
 ### object()方法
 
+json格式的发明人Douglas Crockford 在2006年发表的一篇文章中提出一种实现继承的方法，主要思想是基于一个已有对象，创建一个集成该对象的原型。
+
+```javascript
+function object(proto) {
+  function F() {}
+  F.prototype = proto;
+  return new F();
+}
+```
+
+上面这个 `object` 方法使用一个空构造函数 `F` 作为桥接，让 `F.prototype` 指向第一个参数，这样使用关键字 `new` 调用 `F` 构造函数就会返回一个原型指向第一个参数的对象，从而实现继承。到了 `es5`，这个方法被规范化为 `Object.create`, 同时，`Object.create` 还可以设置第一个参数为null，返回一个不继承任何一个对象的对象，并且支持传入第二个参数，是要添加到新创建对象的可枚举属性（即其自身定义的属性，而不是其原型链上的枚举属性）对象的属性描述符以及相应的属性名称。这些属性对应`Object.defineProperties()`的第二个参数，所以我们可以这样写 `object` 方法。
+
+```javascript
+function object(proto) {
+  if (typeof proto !== 'object') {
+    throw new TypeError('proto is not a object');
+  }
+  if (Object.create) {
+    return Object.create(proto);
+  }
+  if (proto === null) {
+    throw new TypeError('Object.create unsupported, proto counld not be null');
+  }
+  function F() {}
+  F.prototype = proto;
+  return new F();
+}
+
+
+var person = {
+  name: 'chenfuqiang',
+  age: 18,
+  friends: ['Bob', 'Mike']
+}
+
+var student = object(person);
+student.grade = 6;
+
+console.log(student.name);//chenfuqiang
+console.log(student.age);//18
+console.log(student.grade);//6
+console.log(student.friend);//['Bob', 'Mike']
+
+person.friends.push('Mary');
+console.log(student.friends);//['Bob', 'Mike', 'Mary']
+```
+
+上面的 `student` 基于对象 `person` 创建，拥有了`person`所有的属性，由于本质上是原型链继承，所以所有对`person`对象的修改，都会影响到子类。
+
+
 ### 浅复制
 
+如果不考虑复杂的原型，对对象的属性进行复制也可以实现继承。
+
+```javascript
+function extend(target, source) {
+  for(var key in source) {
+    if (source[key] !== 'undefined') {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+var person = {
+  name: 'chenfuqiang',
+  age: 18,
+  friends: ['Bob', 'Mike']
+}
+var student = extend({}, person);
+student.grade = 6;
+
+console.log(student.name);//chenfuqiang
+console.log(student.age);//18
+console.log(student.grade);//6
+console.log(student.friend);//['Bob', 'Mike']
+
+person.friends.push('Mary');
+person.name = 'Lily';
+console.log(student.friends);//['Bob', 'Mike']
+console.log(student.name);//chenfuqiang
+```
+
+`student` 通过复制获取到了 `person` 的属性，由于是直接复制，当属性是引用类型时，复制的也是一个引用，如果对这个引用类型属性做修改时，会影响到所有指向这个对象的引用。
+
 ### 深复制
+
+深复制基于浅复制的思想，只是在遇到对象或数组时，不再只是复制一个引用，而是进行递归复制。
+
+```javascript
+function extend(target, source) {
+  target = target || {};
+  for (var key in source) {
+    if (typeof source[key] === 'object') {
+      target[key] = (Array.isArray(source[key])) ? [] : {};
+      extend(target[key], source[key]);
+    } else if (source[key] !== 'undefined'){
+      target[key] = source[key]
+    }
+  }
+  return target;
+}
+var person = {
+  name: 'chenfuqiang',
+  age: 18,
+  friends: ['Bob', 'Mike']
+}
+var student = extend({}, person);
+student.grade = 6;
+
+console.log(student.name);
+console.log(student.age);
+console.log(student.grade);
+console.log(student.friend);
+
+person.friends.push('Mary');
+person.name = 'Lily';
+console.log(student.friends);
+console.log(student.name);
+```
 
 ## 构造函数继承
 

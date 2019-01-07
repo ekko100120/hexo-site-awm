@@ -3,6 +3,7 @@ layout: post
 title: javascript 原型链
 tags:
   - javacript
+  - prototype
 category:
   - javascript
 date: 2018-12-24 22:46:48

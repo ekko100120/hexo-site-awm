@@ -2,8 +2,8 @@
 layout: post
 title: PowerMock Love Mockito
 date: 2018-11-07 15:06:21
-tags: ['java', 'test', 'mock', 'mockito']
-category: ['后台', 'java']
+tags: ['java', 'unit test', 'powermock', 'mockito']
+category: ['java']
 ---
 
 # PowerMock Love Mockito

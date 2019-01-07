@@ -2,8 +2,8 @@
 layout: post
 title: mockito 入门用法总结
 date: 2018-11-04 20:41:27
-tags: ['java', 'test', 'mock', 'mockito']
-category: ['后台', 'java']
+tags: ['java', 'unit test', 'mockito']
+category: ['java']
 ---
 
 # mockito 用法总结

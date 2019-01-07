@@ -3,8 +3,8 @@ layout: post
 title: powermock-使用Whitebox打破java类封装
 date: 2018-11-01 20:05:48
 last-modify—date: 2018-11-02 11:50:30
-tags: ['java', 'test', 'powermock']
-category: ['后台', 'java']
+tags: ['java', 'unit test', 'powermock']
+category: ['java']
 ---
 
 # PowerMock-使用 Whitebox 打破 java 类封装（1）

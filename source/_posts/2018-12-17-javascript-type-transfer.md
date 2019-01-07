@@ -3,7 +3,7 @@ layout: post
 title: javascript 类型转换
 tags: javascript
 date: 2018-12-17 19:19:04
-category: ['front end', 'javascript']
+category: ['javascript']
 ---
 
 # javascript 类型转换

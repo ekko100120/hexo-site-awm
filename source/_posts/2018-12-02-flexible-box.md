@@ -2,8 +2,8 @@
 layout: post
 title: flex 布局
 date: 2018-12-02 19:12:28
-tags: ['front end', 'css']
-category: ['front end', 'css']
+tags: ['flex', 'css']
+category: ['css']
 ---
 
 # flex 布局
