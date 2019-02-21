@@ -434,18 +434,9 @@ category: ['front-end']
 
     特点：兼容性较差，兼容性到IE10。
 
-## 两列布局
+## 多列布局
 
 ### 一列定宽，一列自适应
-
-<div class="content bg-secondary p-2" style="width: 360px; height: 270px;">
-  <div class="left bg-light">
-    left
-  </div>
-  <div class="right bg-light">
-    right
-  </div>
-</div>
 
 1. 右栏设置 `width: width; float: left;`, 右栏设置 `margin-left: width;`。
 
@@ -470,7 +461,7 @@ category: ['front-end']
     </style>
     ```
 
-    <div class="content bg-secondary p-2" style="width: 360px; height: 270px;">
+    <div class="content bg-secondary p-2" style="width: 360px; height: 150px;">
       <div class="left bg-light" style="float: left; width: 60px;">
         left
       </div>
@@ -479,7 +470,206 @@ category: ['front-end']
       </div>
     </div>
 
-## 三列布局
+    特点： 简单
+
+2. 父框设置 `display: table; table-layout: fixed;`，左栏设置 `width: width; display: table-cell;`，右栏设置 `display: table-cell;`。
+
+    ```html
+    <div class="content">
+      <div class="left">
+        left
+      </div>
+      <div class="right">
+        right
+      </div>
+    </div>
+    <style>
+      .content {
+        display: table;
+        table-layout: fixed;
+      }
+      .left {
+        display: table-cell;
+        width: 100px;
+      }
+      .right {
+        display: table-cell;
+      }
+    </style>
+    ```
+
+    <div class="content bg-secondary p-2" style="display: table; width: 360px; height: 150px;">
+      <div class="left" style="display: table-cell; padding-right: 8px; width: 100px;">
+        <div class="left-content bg-light h-100">
+          left
+        </div>
+      </div>
+      <div class="right bg-light" style="display: table-cell;">
+        right
+      </div>
+    </div>
+
+### 一列不定宽，一列自适应
+
+1. 右栏设置 `width: width; float: left;`, 右栏设置 `overflow: auto;`。
+
+    ```html
+    <div class="content">
+      <div class="left">
+        left
+      </div>
+      <div class="right">
+        right
+      </div>
+    </div>
+    <style>
+      .left {
+        float: left;
+        width: 60px;
+      }
+
+      .right {
+        overflow: auto;
+      }
+    </style>
+    ```
+
+    <div class="content bg-secondary p-2" style="width: 360px; height: 150px;">
+      <div class="left bg-light mr-2" style="float: left; width: 60px;">
+        left
+      </div>
+      <div class="right bg-light" style="overflow: auto">
+        right
+      </div>
+    </div>
+
+    特点： 简单，同样适合定宽。
+
+2. 父框设置 `display: table;`，左栏设置 `width: 0,1%; display: table-cell;`，右栏设置 `display: table-cell;`。
+
+    ```html
+    <div class="content">
+      <div class="left">
+        left
+      </div>
+      <div class="right">
+        right
+      </div>
+    </div>
+    <style>
+      .content {
+        display: table;
+      }
+      .left {
+        display: table-cell;
+        width: 0.1%;
+      }
+      .right {
+        display: table-cell;
+      }
+    </style>
+    ```
+
+    <div class="content bg-secondary p-2" style="display: table; width: 360px; height: 150px;">
+      <div class="left" style="display: table-cell; padding-right: 8px; width: 0.1%">
+        <div class="left-content bg-light h-100">
+          left
+        </div>
+      </div>
+      <div class="right bg-light" style="display: table-cell;">
+        right
+      </div>
+    </div>
+
+3. 父框设置 `display: flex;`，右栏设置 `flex: 1;`。
+
+    ```html
+    <div class="content">
+      <div class="left">
+        left
+      </div>
+      <div class="right">
+        right
+      </div>
+    </div>
+    <style>
+      .content {
+        display: flex;
+      }
+      .right {
+        flex: 1;
+      }
+    </style>
+    ```
+
+    <div class="content bg-secondary p-2" style="display: flex; width: 360px; height: 150px;">
+      <div class="left bg-light mr-2">
+        left
+      </div>
+      <div class="right bg-light" style="flex: 1;">
+        right
+      </div>
+    </div>
+
+    特点：简单，但兼容性较差。
+
+### 多列定宽，一列自适应
+
+### 多列不定宽，一列自适应
+
+## 等高布局
+
+## 等分布局
+
+## 三栏布局
+
+  中间主栏，左右各一个边栏
+
+### 浮动布局
+  
+左栏设置 `float: left;`，右栏设置 `float: right;`，主栏设置 `overflow: auto;`。
+
+  ```html
+  <div class="content">
+    <div class="left">
+      left
+    </div>
+    <div class="right">
+      right
+    </div>
+    <div class="center">
+      center
+    </div>
+  </div>
+  <style>
+    .content {
+      overflow: auto;
+    }
+    .left {
+      float: left;
+    }
+    .right {
+      float: right;
+    }
+    .center {
+      overflow: auto;
+    }
+  </style>
+  ```
+
+  <div class="content bg-secondary p-2" style="width: 360px; overflow: auto;">
+    <div class="left bg-light mr-2" style="float: left; height: 210px;">
+      left
+    </div>
+    <div class="right bg-light ml-2" style="float: right; height: 140px;">
+      right
+    </div>
+    <div class="center bg-light" style="overflow: auto; height: 180px;">
+      center
+    </div>
+  </div>
+
+  特点：简单易理解，三栏全部自适应，但浏览器会先渲染边栏，再渲染主栏，父框高度由主栏说了算，可通过清除浮动解决。
 
 ### 圣杯布局
 
