@@ -788,7 +788,61 @@ category: ['front-end']
 
 ### 定位布局
 
+  ```html
+  <div class="content">
+    <div class="header">header</div>
+    <div class="main">
+      <div class="center">
+        center
+      </div>
+      <div class="left">
+        left
+      </div>
+      <div class="right">
+        right
+      </div>
+    </div>
+    <div class="footer">footer</div>
+  </div>
+  <style>
+    .main {
+      position: relative;
+    }
+    .center {
+      margin: 0 80px;
+    }
+    .left {
+      position: absolute; 
+      left: 0; 
+      top: 0; 
+      width: 80px;
+    }
+    .right {
+      position: absolute; 
+      right: 0; 
+      top: 0; 
+      width: 80px;
+    }
+  </style>
+  ```
 
+  <div class="content bg-secondary" style="width: 360px">
+    <div class="header bg-light">header</div>
+    <div class="main clearfix my-2" style="position: relative; overflow: hidden;">
+      <div class="center" style="margin: 0 80px;">
+        <div class="bg-light m-2" style="height: 168px"> center </div>
+      </div>
+      <div class="left" style="position: absolute; left: 0; top: 0; width: 80px;">
+        <div class="bg-light m-2" style="height: 88px"> left </div>
+      </div>
+      <div class="right" style="position: absolute; right: 0; top: 0; width: 80px;">
+        <div class="bg-light m-2" style="height: 68px"> right </div>
+      </div>
+    </div>
+    <div class="footer bg-light">footer</div>
+  </div>
+
+  特点：简单，左右栏高度不允许超过中间栏的高度。
 
 ### 双飞翼改造
 
@@ -847,6 +901,62 @@ category: ['front-end']
   </div>
 
   特点：在双飞翼的基础上改造，去除了需要额外嵌套的一层标签。
+
+### flex 布局
+
+  ```html
+  <div class="content">
+    <div class="header">header</div>
+    <div class="main">
+      <div class="center">
+        center
+      </div>
+      <div class="left">
+        left
+      </div>
+      <div class="right">
+        right
+      </div>
+    </div>
+    <div class="footer">footer</div>
+  </div>
+  <style>
+    .main {
+      display: flex;
+    }
+    .center {
+      order: 2;
+      flex: 1;
+    }
+    .left {
+      order: 1;
+      flex: 0;
+    }
+    .right {
+      order: 3;
+      flex: 0;
+    }
+  </style>
+  ```
+
+  <div class="content bg-secondary" style="width: 360px">
+    <div class="header bg-light">header</div>
+    <div class="main clearfix my-2" style="display: flex;">
+      <div class="center" style="order: 2; flex: 1;">
+        <div class="bg-light m-2" style="height: 168px"> center </div>
+      </div>
+      <div class="left" style="order: 1; flex: 0; width: 80px;">
+        <div class="bg-light m-2" style="height: 88px"> left </div>
+      </div>
+      <div class="right" style="order: 3; flex: 0; width: 80px;">
+        <div class="bg-light m-2" style="height: 68px"> right </div>
+      </div>
+    </div>
+    <div class="footer bg-light">footer</div>
+  </div>
+
+  特点：简单，但兼容性不好。
+
 
 
 
