@@ -673,9 +673,180 @@ category: ['front-end']
 
 ### 圣杯布局
 
+  ```html
+  <div class="content">
+    <div class="header">header</div>
+    <div class="main">
+      <div class="center">center</div>
+      <div class="left">left</div>
+      <div class="right">right</div>
+    </div>
+    <div class="footer">footer</div>
+  </div>
+  <style>
+    .main {
+      padding: 0 80px;
+    }
+    .center, .left, .right {
+      position: relative; 
+      float: left;
+    }
+    .center {
+      width: 100%;
+    }
+    .left {
+      margin-left: -100%; 
+      left: -80px; 
+      width: 80px;
+    }
+    .right {
+      margin-left: -80px; 
+      left: 80px; 
+      width: 80px;
+    }
+  </style>
+  ```
+
+  <div class="content bg-secondary" style="width: 360px">
+    <div class="header bg-light">header</div>
+    <div class="main clearfix my-2" style="padding: 0 80px;">
+      <div class="center" style="position: relative; float: left; width: 100%;">
+        <div class="bg-light m-2" style="height: 168px"> center </div>
+      </div>
+      <div class="left" style="position: relative; float: left; margin-left: -100%; left: -80px; width: 80px;">
+        <div class="bg-light m-2" style="height: 88px"> left </div>
+      </div>
+      <div class="right" style="position: relative; float: left; margin-left: -80px; left: 80px; width: 80px;">
+        <div class="bg-light m-2" style="height: 68px"> right </div>
+      </div>
+    </div>
+    <div class="footer bg-light">footer</div>
+  </div>
+
+  特点：左右栏定宽，左栏宽度不能大于中间栏宽度。
+
 ### 双飞翼布局
 
+  ```html
+  <div class="content">
+    <div class="header">header</div>
+    <div class="main">
+      <div class="center-wrapper">
+        <div class="center">
+          center 
+        </div>
+      </div>
+      <div class="left">
+        left
+      </div>
+      <div class="right">
+        right
+      </div>
+    </div>
+    <div class="footer">footer</div>
+  </div>
+  <style>
+    .center-wrapper {
+      float: left; 
+      width: 100%;
+    }
+    .center {
+      margin: 0 80px;
+    }
+    .left {
+      float: left; 
+      margin-left: -100%; 
+      width: 80px;
+    }
+    .right {
+      float: left; 
+      margin-left: -80px; 
+      width: 80px;
+    }
+  </style>
+  ```
+
+  <div class="content bg-secondary" style="width: 360px">
+    <div class="header bg-light">header</div>
+    <div class="main clearfix my-2">
+      <div class="center-wrapper" style="float: left; width: 100%;">
+        <div class="center" style="margin: 0 80px;">
+          <div class="bg-light m-2" style="height: 168px"> center </div>
+        </div>
+      </div>
+      <div class="left" style="float: left; margin-left: -100%; width: 80px;">
+        <div class="bg-light m-2" style="height: 88px"> left </div>
+      </div>
+      <div class="right" style="float: left; margin-left: -80px; width: 80px;">
+        <div class="bg-light m-2" style="height: 68px"> right </div>
+      </div>
+    </div>
+    <div class="footer bg-light">footer</div>
+  </div>
+
+  特点：左右栏定宽，解决了圣杯布局左栏宽度不能大于中间栏宽度的问题。
+
 ### 定位布局
+
+
+
+### 双飞翼改造
+
+  利用 `box-size: border-box;` 使用外层的 `padding` 代替双飞翼内层的 `margin`。
+
+  ```html
+  <div class="content">
+    <div class="header">header</div>
+    <div class="main">
+      <div class="center">
+        center
+      </div>
+      <div class="left">
+        left
+      </div>
+      <div class="right">
+        right
+      </div>
+    </div>
+    <div class="footer">footer</div>
+  </div>
+  <style>
+    .center {
+      float: left; 
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0 80px;
+    }
+    .left {
+      float: left; 
+      margin-left: -100%; 
+      width: 80px;
+    }
+    .right {
+      float: left; 
+      margin-left: -80px; 
+      width: 80px;
+    }
+  </style>
+  ```
+
+  <div class="content bg-secondary" style="width: 360px">
+    <div class="header bg-light">header</div>
+    <div class="main clearfix my-2">
+      <div class="center" style="float: left; width: 100%; padding: 0 80px;">
+        <div class="bg-light m-2" style="height: 168px"> center </div>
+      </div>
+      <div class="left" style="float: left; margin-left: -100%; width: 80px;">
+        <div class="bg-light m-2" style="height: 88px"> left </div>
+      </div>
+      <div class="right" style="float: left; margin-left: -80px; width: 80px;">
+        <div class="bg-light m-2" style="height: 68px"> right </div>
+      </div>
+    </div>
+    <div class="footer bg-light">footer</div>
+  </div>
+
+  特点：在双飞翼的基础上改造，去除了需要额外嵌套的一层标签。
 
 
 
