@@ -438,7 +438,7 @@ category: ['front-end']
 
 ### 一列定宽，一列自适应
 
-1. 右栏设置 `width: width; float: left;`, 右栏设置 `margin-left: width;`。
+1. 浮动布局，右栏设置 `width: width; float: left;`, 右栏设置 `margin-left: width;`。
 
     ```html
     <div class="content">
@@ -472,7 +472,7 @@ category: ['front-end']
 
     特点： 简单
 
-2. 父框设置 `display: table; table-layout: fixed;`，左栏设置 `width: width; display: table-cell;`，右栏设置 `display: table-cell;`。
+2. table布局，父框设置 `display: table; table-layout: fixed;`，左栏设置 `width: width; display: table-cell;`，右栏设置 `display: table-cell;`。
 
     ```html
     <div class="content">
@@ -511,7 +511,7 @@ category: ['front-end']
 
 ### 一列不定宽，一列自适应
 
-1. 右栏设置 `width: width; float: left;`, 右栏设置 `overflow: auto;`。
+1. 浮动布局，右栏设置 `float: left;`, 右栏设置 `overflow: auto;`。
 
     ```html
     <div class="content">
@@ -525,7 +525,6 @@ category: ['front-end']
     <style>
       .left {
         float: left;
-        width: 60px;
       }
 
       .right {
@@ -535,7 +534,7 @@ category: ['front-end']
     ```
 
     <div class="content bg-secondary p-2" style="width: 360px; height: 150px;">
-      <div class="left bg-light mr-2" style="float: left; width: 60px;">
+      <div class="left bg-light mr-2" style="float: left;">
         left
       </div>
       <div class="right bg-light" style="overflow: auto">
@@ -545,7 +544,7 @@ category: ['front-end']
 
     特点： 简单，同样适合定宽。
 
-2. 父框设置 `display: table;`，左栏设置 `width: 0,1%; display: table-cell;`，右栏设置 `display: table-cell;`。
+2. table布局，父框设置 `display: table;`，左栏设置 `width: 0.1%; display: table-cell;`，右栏设置 `display: table-cell;`。
 
     ```html
     <div class="content">
@@ -581,7 +580,7 @@ category: ['front-end']
       </div>
     </div>
 
-3. 父框设置 `display: flex;`，右栏设置 `flex: 1;`。
+3. flex布局，父框设置 `display: flex;`，右栏设置 `flex: 1;`。
 
     ```html
     <div class="content">
@@ -615,7 +614,140 @@ category: ['front-end']
 
 ### 多列定宽，一列自适应
 
+  1. 浮动布局，`float + margin`。
+
+      ```html
+      <div class="content">
+        <div class="left bg-light mr-2" style="float: left; width: 80px; height: 88px; margin-right: 8px;">
+          left
+        </div>
+        <div class="left bg-light mr-2" style="float: left; width: 80px; height: 68px; margin-right: 8px;">
+          left
+        </div>
+        <div class="main bg-light" style="margin-left: 176px; height: 168px;">
+          main
+        </div>
+      </div>
+      <style>
+
+      </style>
+      ```
+
+      <div class="content bg-secondary p-2" style="width: 360px; overflow: hidden;">
+        <div class="left bg-light mr-2" style="float: left; width: 80px; height: 88px; margin-right: 8px;">
+          left
+        </div>
+        <div class="left bg-light mr-2" style="float: left; width: 80px; height: 68px; margin-right: 8px;">
+          left
+        </div>
+        <div class="main bg-light" style="margin-left: 176px; height: 168px;">
+          main
+        </div>
+      </div>
+
+      特点：兼容性好，父框高度由最右边的主栏决定，可通过清除浮动解决。
+
+  2. table布局。
+
+      ```html
+      <div class="content">
+        <div class="left">
+          left
+        </div>
+        <div class="left">
+          left
+        </div>
+        <div class="main">
+          main
+        </div>
+      </div>
+      <style>
+        .content {
+          display: table;
+          table-layout: fixed;
+        }
+        .left {
+          display: table-cell;
+          width: 80px;
+        }
+        .main {
+          display: table-cell;
+        }
+      </style>
+      ```
+
+      <div class="content bg-secondary p-2" style="display: table; width: 360px; table-layout: fixed;">
+        <div class="left" style="display: table-cell; width: 80px; padding-right: 8px; height: 88px;">
+          <div class="h-100 bg-light">
+            left
+          </div>
+        </div>
+        <div class="left" style="display: table-cell; width: 80px; padding-right: 8px; height: 68px;">
+          <div class="h-100 bg-light">
+            left
+          </div>
+        </div>
+        <div class="main" style="display: table-cell; height: 168px;">
+          <div class="h-100 bg-light">
+            main
+          </div>
+        </div>
+      </div>
+
+      特点：简单，兼容性好，兼容至ie8，同时也是等高布局。
+
 ### 多列不定宽，一列自适应
+
+  1. 浮动布局，`float + overflow`。
+
+      特点：兼容性好，使用简单
+
+  2. table布局。
+
+      特点：兼容性好，使用简单，同时也是等高布局。
+
+  3. flex布局。
+
+      ```html
+      <div class="content bg-secondary" style="display: flex; width: 360px;">
+        <div class="main bg-light" style="flex: 1; order: 2; height: 168px;">
+          main
+        </div>
+        <div class="left bg-light mr-2" style="flex: 0; order: 1; height: 88px;">
+          left
+        </div>
+        <div class="left bg-light mr-2" style="flex: 0; order: 1; height: 68px;">
+          left
+        </div>
+      </div>
+      <style>
+        .content: {
+          display: flex;
+        }
+        .main {
+          flex: 1;
+          order: 2;
+        }
+        .left {
+          flex: 0;
+          order: 1;
+        }
+      </style>
+      ```
+
+      <div class="content bg-secondary" style="display: flex; width: 360px;">
+        <div class="main bg-light" style="flex: 1; order: 2; height: 168px;">
+          main
+        </div>
+        <div class="left bg-light mr-2" style="flex: 0; order: 1; height: 88px;">
+          left
+        </div>
+        <div class="left bg-light mr-2" style="flex: 0; order: 1; height: 68px;">
+          left
+        </div>
+      </div>
+
+      特点：兼容性较差，简单易懂，可随意调换dom节点的位置。
 
 ## 等高布局
 
