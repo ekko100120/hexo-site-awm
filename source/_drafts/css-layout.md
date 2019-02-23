@@ -700,9 +700,59 @@ category: ['front-end']
 
   1. 浮动布局，`float + overflow`。
 
+      ```html
+      <div class="content">
+        <div class="left">
+          left
+        </div>
+        <div class="left">
+          left
+        </div>
+        <div class="main">
+          main
+        </div>
+      </div>
+      <style>
+        .left {
+          float: left;
+        }
+        .main {
+          overflow: auto;
+        }
+      </style>     
+      ```
+
+      <div class="content bg-secondary p-2" style="width: 360px;">
+        <div class="left bg-light mr-2" style="float: left; height: 88px;">
+          left
+        </div>
+        <div class="left bg-light mr-2" style="float: left; height: 68px;">
+          left
+        </div>
+        <div class="main bg-light" style="overflow: auto; height: 168px;">
+          main
+        </div>
+      </div>
+
       特点：兼容性好，使用简单
 
   2. table布局。
+
+      <div class="content bg-secondary p-2" style="display: table; width: 360px;">
+        <div class="left pr-2" style="display: table-cell; width: 0.1%; height: 88px;">
+          <div class="bg-light h-100">
+            left
+          </div>
+        </div>
+        <div class="left pr-2" style="display: table-cell; width: 0.1%; height: 88px;">
+          <div class="bg-light h-100">
+            left
+          </div>
+        </div>
+        <div class="main bg-light" style="display: table-cell; height: 168px;">
+          main
+        </div>
+      </div>
 
       特点：兼容性好，使用简单，同时也是等高布局。
 
@@ -735,7 +785,7 @@ category: ['front-end']
       </style>
       ```
 
-      <div class="content bg-secondary" style="display: flex; width: 360px;">
+      <div class="content bg-secondary p-2" style="display: flex; width: 360px;">
         <div class="main bg-light" style="flex: 1; order: 2; height: 168px;">
           main
         </div>
@@ -751,7 +801,11 @@ category: ['front-end']
 
 ## 等高布局
 
+
+
 ## 等分布局
+
+
 
 ## 三栏布局
 
